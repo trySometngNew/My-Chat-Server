@@ -29,6 +29,7 @@ public class MyChatServerImpl implements iMyChatServer {
 
     public static List<String> Users = new ArrayList<>();
     public static Map<HandleClientImpl, Integer> clientListMap = new HashMap<>();
+    public static Map<Integer, Integer[]> conversationMap = new HashMap<>();
     private int[] freePorts = new int[4];
 
     private MyChatServerImpl() {
@@ -40,7 +41,8 @@ public class MyChatServerImpl implements iMyChatServer {
 
     @Override
     public void messageHandler() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
+        //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -56,30 +58,29 @@ public class MyChatServerImpl implements iMyChatServer {
         try {
             ServerSocket server = new ServerSocket(CHAT_SERVER_PORT, iMyChatServer.CLIENT_THREAD_LIMIT);
             System.out.println("Server connected...");
-            int chatClient = 0;
+            int conversationId = 1;
             while (true) {
                 Socket socket;
                 socket = server.accept();
                 HandleClientImpl client = new HandleClientImpl(socket);
-                chatClient++;
+                // Port number which is mapped to acti8ve conversation id
                 int portNumber = 0;
-                if(chatClient>MyChatServerImpl.CLIENT_THREAD_LIMIT) {
-                    if(clientListMap.size()==MyChatServerImpl.CLIENT_THREAD_LIMIT) {
-                        // limit of simultaneoud conversations threshold reached
+                if(clientListMap.size()>=(MyChatServerImpl.CLIENT_THREAD_LIMIT / 2)) {
+                    // limit of simultaneous conversations threshold reached
+                   Logger.getLogger(MyChatServerImpl.class.getName()).log(Level.INFO, 
+                           "Additional connections are not currently possible.");
                         
-                    } else {
-                        // Some port unused
-                        for(int i=0; i<freePorts.length; i++){
-                            if(freePorts[i]!=0) {
-                                portNumber = freePorts[i];
-                                freePorts[i] = 0;
-                            }
-                        }
-                    }
                 } else {
-                    chatClient++;
+                    // Some port unused. Use them for new connection
+                    for(int i=0; i<freePorts.length; i++){
+                        if(freePorts[i]!=0) {
+                            portNumber = freePorts[i];
+                            freePorts[i] = 0;
+                            break;
+                        }
+                    }   
+                    clientListMap.put(client, portNumber);
                 }
-                clientListMap.put(client, portNumber);
             }
         } catch (IOException ex) {
             Logger.getLogger(MyChatServerImpl.class.getName()).log(Level.SEVERE, null, ex);
