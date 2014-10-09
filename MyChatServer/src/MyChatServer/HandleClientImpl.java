@@ -14,8 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
  * This class takes care of all responsibilities for each client @ server side.
- * It maintains all sessions information, state of client. It uses  <code>MyChatServerImpl</code>
- * for imposing some server side constraints like number of active users.
+ * It maintains all sessions information, state of client. It uses 
+ * <code>MyChatServerImpl</code> for imposing some server side constraints like 
+ * number of active users.
  * @see MyChatServerImpl
  * @author sourabh_lonikar
  */
@@ -25,7 +26,9 @@ public class HandleClientImpl implements iHandleClient {
     private HandleClientImpl chatPartner;
     private String statusMessage;
     private String chatPartnerStatusMessage;
-
+    BufferedReader input;
+    PrintWriter output;
+    
     public String getName() {
         return name;
     }
@@ -41,8 +44,6 @@ public class HandleClientImpl implements iHandleClient {
     public void setChatPartnerName(HandleClientImpl chatPartnerName) {
         this.chatPartner = chatPartnerName;
     }
-    BufferedReader input;
-    PrintWriter output;
 
     public HandleClientImpl(Socket client) throws IOException {
         input = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -84,6 +85,7 @@ public class HandleClientImpl implements iHandleClient {
                 return true;
             } else {
                 // Does not wish to chat.
+                chatPartner.sendMessage(this, this.getName() + "has chosen not to engage with you currently in conversation.");
                 return false;
             }
         } else {
@@ -113,14 +115,21 @@ public class HandleClientImpl implements iHandleClient {
             try {
                 line = input.readLine();
                 if (line.equalsIgnoreCase("EXIT")) {
+                    // close connection
                     output.println("Closing connection with " + this.getChatPartnerName());
                     this.getChatPartnerName().output.println(this.getName()+ " has chosen to close this chat. Good Bye !");
                     MyChatServerImpl.Users.remove(this.chatPartner.getName());
                     MyChatServerImpl.clientList.remove(this.chatPartner);
                     break;
                 } else if (name.equalsIgnoreCase(line)) {
+                    // Test connection by ping oneself
                     output.println("OK");
-                } else {
+                } else if(name.contains("Ping")) {
+                    String chatPartner = name.substring(name.indexOf("Ping") + "Ping ".length()));
+                    MyChatServerImpl.getInstance().
+                    
+                }else {
+                    // send message to chat partner
                     this.getChatPartnerName().sendMessage(this, name);
                 }
             } catch (IOException ex) {

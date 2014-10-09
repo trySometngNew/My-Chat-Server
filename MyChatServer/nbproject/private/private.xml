@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group name="My Chat Server"/>
+        <group name="My Chat Server">
+            <file>file:/C:/Users/win7/Documents/NetBeansProjects/My%20Chat%20Server/MyChatServer/src/MyChatServer/iMyChatServer.java</file>
+            <file>file:/C:/Users/win7/Documents/NetBeansProjects/My%20Chat%20Server/MyChatServer/src/MyChatServer/iHandleClient.java</file>
+            <file>file:/C:/Users/win7/Documents/NetBeansProjects/My%20Chat%20Server/MyChatServer/src/MyChatServer/iClient.java</file>
+            <file>file:/C:/Users/win7/Documents/NetBeansProjects/My%20Chat%20Server/MyChatServer/src/MyChatServer/HandleClientImpl.java</file>
+            <file>file:/C:/Users/win7/Documents/NetBeansProjects/My%20Chat%20Server/MyChatServer/src/MyChatServer/MyChatServerImpl.java</file>
+            <file>file:/C:/Users/win7/Documents/NetBeansProjects/My%20Chat%20Server/MyChatServer/src/MyChatServer/ClientImpl.java</file>
+        </group>
     </open-files>
 </project-private>
