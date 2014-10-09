@@ -98,9 +98,45 @@ public class MyChatServerImpl implements iMyChatServer {
 
     @Override
     public void exit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
+        //To change body of generated methods, choose Tools | Templates.
     }
-
+    
+    /**
+     * This method is called upon by any client when it sstarts active conversation.
+     * This will take up free ports as well as start conversation. 
+     * It will also inform both parties of start of conversation.
+     * Same port numbers will be allocated to chatting partners.
+     */
+    public void startConversation(int conversationId) {
+        Integer[] conversationInfo = new Integer[3];
+        int port = 0;
+        for(int i=0; i<this.freePorts.length; i++) {
+            if(this.freePorts[i]!=0) {
+                port = this.freePorts[0];
+                this.freePorts[0] = 0;
+            }
+        }
+        
+        
+    }    
+    
+    /**
+     * This method is called upon by any client when it ends active conversation.
+     * This will free up occupied ports as well as save conversation in files 
+     * for records. It will also inform both parties of end of conversation.
+     * Same port numbers will be allocated to chatting partners.
+     */
+    public void endConversation(int conversationId) {
+        Integer[] conversationInfo = MyChatServerImpl.conversationMap.remove(conversationId);
+        int port = conversationInfo[0];
+        for(int i=0; i<this.freePorts.length; i++){
+            if(this.freePorts[i]==0) {
+                this.freePorts[i] = port;
+            }
+        }
+    }
+    
     /**
      * Broadcasts message to all users when requested by one user.
      *
