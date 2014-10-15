@@ -8,12 +8,14 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 
 /**
- *
+ * This server will allow maximum defined simultaneous conversations with only
+ * single client involved per conversation. <code> This limitation will be 
+ * withdrawn as and when MyChatServer version 1.0 is ready </code>
  * @author sourabh_lonikar
- */
+ **/
 public interface iMyChatServer {
     /**
-     * Limit number of chat clients
+     * Limit number of simultaneous chat conversations
      */
     public static final int CLIENT_THREAD_LIMIT = 10;
     public static final int CHAT_SERVER_PORT = 8080;
