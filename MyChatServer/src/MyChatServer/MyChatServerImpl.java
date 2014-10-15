@@ -34,6 +34,8 @@ public class MyChatServerImpl implements iMyChatServer {
     public static boolean isChatServerNeeded = false;
     public static int startClientID = -1;
     public static int receiverClientID = -1;
+    private static int portScanStartNumber = 8000;
+    private static int portScanRange = 100;
 
     private MyChatServerImpl() {
     }
@@ -85,7 +87,7 @@ public class MyChatServerImpl implements iMyChatServer {
                         if (!MyChatServerImpl.clientListMap.containsKey(MyChatServerImpl.startClientID)
                                 || !MyChatServerImpl.clientListMap.containsKey(MyChatServerImpl.receiverClientID)) {
                             portNumber = getFreePorts();
-                            clientListMap.put(client, portNumber);    
+                            clientListMap.put(client, portNumber);
                         } else {
                             // reject conversation request. 
 
@@ -101,23 +103,35 @@ public class MyChatServerImpl implements iMyChatServer {
     }
 
     private int getFreePorts() {
+        if (MyChatServerImpl.clientListMap.size() <= (MyChatServerImpl.CLIENT_THREAD_LIMIT/2)) {
         // Some port unused. Use them for new connection
-        if (freePorts.length != 0) {
-            for (int i = 0; i < freePorts.length; i++) {
-                if (freePorts[i] != 0) {
-                    portNumber = freePorts[i];
-                    freePorts[i] = 0;
-                    break;
+            int portNumber = -1;
+            if (freePorts.length != 0) {
+                for (int i = 0; i < freePorts.length; i++) {
+                    if (freePorts[i] != 0) {
+                        portNumber = freePorts[i];
+                        freePorts[i] = 0;
+                        break;
+                    }
                 }
+
+            } else {
+                /** Find more free ports by iterating through ports 8000 - 8100
+                 *  Supposed to test for free ports at client side.
+                 *  Redundant step till only one client per chat allowed.
+                 */
+                return 8080;
+                /** 
+                 * for(int i=MyChatServerImpl.portScanStartNumber; i<MyChatServerImpl.portScanRange; i++) {
+                    
+                }  */
             }
-
+            return portNumber;
         } else {
-            // Find more free ports
-
+            return -1;
         }
     }
-    
-    
+
     /**
      * Create new Instance of Chat Server.
      *
