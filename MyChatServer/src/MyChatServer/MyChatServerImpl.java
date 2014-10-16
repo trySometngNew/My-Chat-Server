@@ -29,7 +29,7 @@ public class MyChatServerImpl implements iMyChatServer {
     public static List<String> Users = new ArrayList<>();
     public static Map<HandleClientImpl, Integer> clientListMap = new HashMap<>();
     public static Map<Integer, Integer[]> conversationMap = new HashMap<>();
-    private int[] freePorts = new int[4];
+    private int[] freePorts = new int[10];
     // Pooling variable used by clients to flag server for processes
     public static boolean isChatServerNeeded = false;
     public static int startClientID = -1;
@@ -60,7 +60,7 @@ public class MyChatServerImpl implements iMyChatServer {
      */
     @Override
     public void process() {
-        try {
+        try { 
             ServerSocket server = new ServerSocket(CHAT_SERVER_PORT, iMyChatServer.CLIENT_THREAD_LIMIT);
             System.out.println("Server connected...");
             int conversationId = 1;
@@ -102,29 +102,38 @@ public class MyChatServerImpl implements iMyChatServer {
         }
     }
 
-    private int getFreePorts() {
-        if (MyChatServerImpl.clientListMap.size() <= (MyChatServerImpl.CLIENT_THREAD_LIMIT/2)) {
-        // Some port unused. Use them for new connection
-            int portNumber = -1;
+    private int[] getFreePorts() {
+        if (MyChatServerImpl.clientListMap.size() <= (MyChatServerImpl.CLIENT_THREAD_LIMIT / 2)) {
+            // Some port unused. Use them for new connection
+            int portNumber[] = new int[2];
+            portNumber[0] = -1;
+            portNumber[1] = -1;
             if (freePorts.length != 0) {
+                int j = 0;
                 for (int i = 0; i < freePorts.length; i++) {
                     if (freePorts[i] != 0) {
-                        portNumber = freePorts[i];
+                        portNumber[j++] = freePorts[i];
                         freePorts[i] = 0;
-                        break;
+                        if (j >= 2) {
+                            break;
+                        }
                     }
                 }
 
             } else {
-                /** Find more free ports by iterating through ports 8000 - 8100
-                 *  Supposed to test for free ports at client side.
-                 *  Redundant step till only one client per chat allowed.
+                /**
+                 * Find more free ports by iterating through ports 8000 - 8100
+                 * Supposed to test for free ports at client side. Redundant
+                 * step till only one client per chat allowed.
                  */
-                return 8080;
-                /** 
-                 * for(int i=MyChatServerImpl.portScanStartNumber; i<MyChatServerImpl.portScanRange; i++) {
-                    
-                }  */
+                portNumber[0] = 8080;
+                portNumber[1] = 8080;
+                /**
+                 * for(int i=MyChatServerImpl.portScanStartNumber;
+                 * i<MyChatServerImpl.portScanRange; i++) {
+                 *
+                 * }
+                 */
             }
             return portNumber;
         } else {
